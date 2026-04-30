@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface ShowRepository extends JpaRepository<Show, Long> {
     List<Show> findByTheatreCityIdAndMovieIdAndShowDate(Long cityId, Long movieId, LocalDate showDate);
+
+    List<Show> findByTheatreCityId(Long cityId);
 }

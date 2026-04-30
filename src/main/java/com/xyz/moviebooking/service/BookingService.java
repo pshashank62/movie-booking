@@ -18,7 +18,9 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +35,8 @@ public class BookingService {
         Show show = showRepository.findById(request.getShowId())
                 .orElseThrow(() -> new ResourceNotFoundException("Show not found"));
 
-        List<ShowSeat> showSeats = showSeatRepository.findByIdInAndStatus(request.getShowSeatIds(), SeatStatus.AVAILABLE);
+        List<ShowSeat> showSeats = showSeatRepository.findByIdInAndStatus(request.getShowSeatIds(),
+                SeatStatus.AVAILABLE);
 
         if (showSeats.size() != request.getShowSeatIds().size()) {
             throw new SeatNotAvailableException("One or more selected seats are not available");
@@ -46,12 +49,12 @@ public class BookingService {
         for (int i = 0; i < showSeats.size(); i++) {
             ShowSeat seat = showSeats.get(i);
             double seatPrice = seat.getPrice();
-            
+
             // 50% discount on the third ticket
             if ((i + 1) % 3 == 0) {
                 seatPrice = seatPrice * 0.5;
             }
-            
+
             totalAmount += seatPrice;
         }
 
@@ -83,5 +86,16 @@ public class BookingService {
                 .totalAmount(totalAmount)
                 .status(booking.getStatus())
                 .build();
+    }
+
+    public Map<String, String> getAllTheMoviesTheatresInCity(Long cityId) {
+        Map<String, String> moviesTheatresMap = new HashMap<>();
+        List<Show> shows = showRepository.findByTheatreCityId(cityId);
+
+        for (Show show : shows) {
+            moviesTheatresMap.put(show.getMovie().getTitle(), show.getTheatre().getName());
+        }
+
+        return moviesTheatresMap;
     }
 }

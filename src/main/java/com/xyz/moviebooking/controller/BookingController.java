@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/bookings")
@@ -20,4 +21,11 @@ public class BookingController {
         BookTicketResponse response = bookingService.bookTickets(request);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/movies-theatres/{cityId}")
+    public ResponseEntity<Map<String, String>> getAllTheMoviesTheatresInCity(@PathVariable Long cityId) {
+        Map<String, String> availability = bookingService.getAllTheMoviesTheatresInCity(cityId);
+        return ResponseEntity.ok(availability);
+    }
+
 }

@@ -20,10 +20,6 @@ public class ShowSeat {
     @JoinColumn(name = "show_id")
     private Show show;
 
-    @ManyToOne
-    @JoinColumn(name = "seat_id")
-    private Seat seat;
-
     private Double price;
 
     @Enumerated(EnumType.STRING)
