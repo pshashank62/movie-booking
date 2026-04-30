@@ -52,21 +52,63 @@ A highly scalable, RESTful B2B and B2C movie ticket booking platform built with 
 **Endpoint:** `/api/v1/cities/{cityId}/movies/{movieId}/theatres?date={YYYY-MM-DD}`
 *Fetches all theatres and showtimes for a specific movie in a given city.*
 
-### 2. Book Tickets (POST)
+### 2. Admin/Utility - Get All Movies and Theatres in City (GET)
+**Endpoint:** `/api/v1/movies-theatres/{cityId}`
+*Provides a simple mapping of available movies and the theatres playing them in a specific city.*
+
+### 3. Book Tickets (POST)
 **Endpoint:** `/api/v1/bookings`
 *Books the requested seats and returns the confirmation with the total amount after applying discounts.*
 **Payload Example:**
 ```json
 {
-  "showId": 101,
-  "showSeatIds": [501, 502, 503],
+  "showId": 1,
+  "showSeatIds": [1, 2, 3],
   "userEmail": "customer@example.com"
 }
 ```
 
-## Documentation
+### 4. Bulk Cancel Bookings (POST)
+**Endpoint:** `/api/v1/bulk-cancel`
+*Cancels multiple bookings at once and releases the associated show inventory back to 'AVAILABLE'.*
+**Payload Example:**
+```json
+{
+  "bookingIds": [101, 102]
+}
+```
 
-For a deeper dive into the architecture, database schema (ER diagram), and internal Spring components, please refer to the [Components Documentation](Components_Documentation.md) included in this repository.
+### 5. Create Show (POST)
+**Endpoint:** `/api/v1/theatres/{theatreId}/shows`
+*Allows a theatre to schedule a new show for a specific movie.*
+**Payload Example:**
+```json
+{
+  "movieId": 1,
+  "showDate": "2026-05-01",
+  "startTime": "10:00:00",
+  "endTime": "12:30:00"
+}
+```
+
+### 6. Update Show (PUT)
+**Endpoint:** `/api/v1/theatres/{theatreId}/shows/{showId}`
+*Allows a theatre to update the movie or timings of an existing show.*
+
+### 7. Delete Show (DELETE)
+**Endpoint:** `/api/v1/theatres/{theatreId}/shows/{showId}`
+*Allows a theatre to completely delete a show. This cascade-deletes any seat inventory allocated to it.*
+
+### 8. Allocate Seat Inventory (POST)
+**Endpoint:** `/api/v1/shows/{showId}/seats`
+*Bulk allocates a specific number of generic seats to a show with a default price.*
+**Payload Example:**
+```json
+{
+  "numberOfSeats": 100,
+  "price": 350.0
+}
+```
 
 ## License
 
