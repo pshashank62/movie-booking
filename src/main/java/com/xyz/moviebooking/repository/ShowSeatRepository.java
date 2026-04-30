@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface ShowSeatRepository extends JpaRepository<ShowSeat, Long> {
     List<ShowSeat> findByIdInAndStatus(List<Long> ids, SeatStatus status);
+    List<ShowSeat> findByShowId(Long showId);
 }

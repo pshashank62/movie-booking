@@ -1,5 +1,8 @@
 package com.xyz.moviebooking.controller;
 
+import com.xyz.moviebooking.dto.AllocateSeatsRequest;
+import com.xyz.moviebooking.dto.CreateShowRequest;
+import com.xyz.moviebooking.dto.ShowDetailsDTO;
 import com.xyz.moviebooking.dto.TheatreShowsDTO;
 import com.xyz.moviebooking.service.TheatreService;
 import lombok.RequiredArgsConstructor;
@@ -25,5 +28,29 @@ public class TheatreController {
         
         List<TheatreShowsDTO> response = theatreService.getTheatresAndShows(cityId, movieId, date);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/theatres/{theatreId}/shows")
+    public ResponseEntity<ShowDetailsDTO> createShow(@PathVariable Long theatreId, @RequestBody CreateShowRequest request) {
+        ShowDetailsDTO response = theatreService.createShow(theatreId, request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/theatres/{theatreId}/shows/{showId}")
+    public ResponseEntity<ShowDetailsDTO> updateShow(@PathVariable Long theatreId, @PathVariable Long showId, @RequestBody CreateShowRequest request) {
+        ShowDetailsDTO response = theatreService.updateShow(theatreId, showId, request);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/theatres/{theatreId}/shows/{showId}")
+    public ResponseEntity<Void> deleteShow(@PathVariable Long theatreId, @PathVariable Long showId) {
+        theatreService.deleteShow(theatreId, showId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/shows/{showId}/seats")
+    public ResponseEntity<Void> allocateSeats(@PathVariable Long showId, @RequestBody AllocateSeatsRequest request) {
+        theatreService.allocateSeats(showId, request);
+        return ResponseEntity.ok().build();
     }
 }

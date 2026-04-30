@@ -2,6 +2,7 @@ package com.xyz.moviebooking.controller;
 
 import com.xyz.moviebooking.dto.BookTicketRequest;
 import com.xyz.moviebooking.dto.BookTicketResponse;
+import com.xyz.moviebooking.dto.BulkCancelRequest;
 import com.xyz.moviebooking.service.BookingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,4 +29,9 @@ public class BookingController {
         return ResponseEntity.ok(availability);
     }
 
+    @PostMapping("/bulk-cancel")
+    public ResponseEntity<Void> bulkCancelBookings(@RequestBody BulkCancelRequest request) {
+        bookingService.bulkCancelBookings(request.getBookingIds());
+        return ResponseEntity.ok().build();
+    }
 }

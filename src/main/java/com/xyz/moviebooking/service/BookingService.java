@@ -98,4 +98,24 @@ public class BookingService {
 
         return moviesTheatresMap;
     }
+
+    @Transactional
+    public void bulkCancelBookings(List<Long> bookingIds) {
+        List<Booking> bookings = bookingRepository.findAllById(bookingIds);
+
+        for (Booking booking : bookings) {
+            booking.setStatus(BookingStatus.CANCELLED);
+            
+            // Release seats
+            List<ShowSeat> seats = showSeatRepository.findByShowId(booking.getShow().getId());
+            for (ShowSeat seat : seats) {
+                if (seat.getBooking() != null && seat.getBooking().getId().equals(booking.getId())) {
+                    seat.setStatus(SeatStatus.AVAILABLE);
+                    seat.setBooking(null);
+                }
+            }
+            showSeatRepository.saveAll(seats);
+        }
+        bookingRepository.saveAll(bookings);
+    }
 }
